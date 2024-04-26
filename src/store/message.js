@@ -35,7 +35,7 @@ export const useMessage = defineStore("message", {
           headers,
         });
         if (response) {
-          this.messageList = response.data;
+          this.messageList = response.data.data;
           this.loading = false;
         }
       } catch (error) {

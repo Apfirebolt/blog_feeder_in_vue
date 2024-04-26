@@ -5,7 +5,7 @@ import httpClient from "../plugins/interceptor";
 
 const authStore = useAuth();
 
-export const useProject = defineStore("project", {
+export const useProject = defineStore("projects", {
   state: () => ({
     project: ref({}),
     projectList: ref([]),
@@ -31,11 +31,11 @@ export const useProject = defineStore("project", {
           Authorization: `Bearer ${authStore.authData.token}`,
         };
         this.loading = true;
-        const response = await httpClient.get(`contact`, {
+        const response = await httpClient.get(`projects`, {
           headers,
         });
         if (response) {
-          this.projectList = response.data;
+          this.projectList = response.data.projects;
           this.loading = false;
         }
       } catch (error) {

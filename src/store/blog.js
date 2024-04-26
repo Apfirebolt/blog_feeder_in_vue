@@ -31,11 +31,11 @@ export const useBlog = defineStore("blog", {
           Authorization: `Bearer ${authStore.authData.token}`,
         };
         this.loading = true;
-        const response = await httpClient.get(`contact`, {
+        const response = await httpClient.get(`posts`, {
           headers,
         });
         if (response) {
-          this.blogList = response.data;
+          this.blogList = response.data.posts;
           this.loading = false;
         }
       } catch (error) {
