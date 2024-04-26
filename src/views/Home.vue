@@ -17,16 +17,7 @@
 
       <!-- Desktop nav area -->
       <div class="hidden lg:min-w-0 lg:flex-1 lg:flex lg:items-center lg:justify-between">
-        <div class="min-w-0 flex-1">
-          <div class="max-w-2xl ml-4 relative text-gray-400 focus-within:text-gray-500">
-            <label for="desktop-search" class="sr-only">Search anime</label>
-            <input id="desktop-search" type="search" placeholder="Search anime" v-model="searchText"
-              class="px-2 py-3 block w-full border-transparent pl-12 placeholder-gray-500 sm:text-sm" />
-            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-4">
-              <SearchIcon @click="searchAnimeUtil" class="h-5 w-5 cursor-pointer" />
-            </div>
-          </div>
-        </div>
+        
         <!-- Dropdown -->
         <Dropdown :navigate-to="navigateTo" :navigation="navigation" />
       </div>
@@ -61,16 +52,7 @@
                   <XIcon class="block h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
-              <div class="mt-2 max-w-8xl mx-auto px-4 sm:px-6">
-                <div class="relative text-gray-400 focus-within:text-gray-500">
-                  <label for="mobile-search" class="sr-only">Search Anime</label>
-                  <input id="mobile-search" v-model="searchText" type="search" placeholder="Search all Anime"
-                    class="px-2 py-3 block w-full border-gray-300 rounded-md pl-10 placeholder-gray-500 focus:border-blue-600 focus:ring-blue-600" />
-                  <div class="absolute inset-y-0 left-0 flex items-center justify-center pl-3">
-                    <SearchIcon class="h-5 w-5" aria-hidden="true" />
-                  </div>
-                </div>
-              </div>
+              
               <div class="max-w-8xl mx-auto py-3 px-2 sm:px-4">
                 <template v-for="item in navigation" :key="item.name">
                   <a :href="item.href"
@@ -112,10 +94,7 @@
                 class="mt-6 md:mt-10 text-md lg:text-xl text-center md:text-left text-gray-700 font-light tracking-wider leading-relaxed">
                 The unofficial MyAnimeList API
               </h3>
-              <p v-if="animeList && animeList.data && animeList.data.length > 0">
-                <span class="text-sm text-gray-500">Showing results for </span>
-                <span class="text-sm font-medium text-gray-500">"{{ searchText }}"</span>
-              </p>
+              
               <div class="mt-10 flex flex-col sm:flex-row justify-center md:justify-start">
                 <a href="https://docs.api.jikan.moe/"
                   class="w-full sm:w-40 px-4 py-3 rounded font-semibold text-md bg-blue-500 text-white border-2 border-blue-500">
@@ -194,28 +173,8 @@ import {
 
 const open = ref(false);
 const anime = useAnime();
-const searchText = ref("");
 const currentPage = ref(1);
 const router = useRouter();
-let timeoutId;
-
-// provide a message to the child components
-provide("message", "Hello message injected from parent!");
-
-const debouncedSearch = (value) => {
-  if (timeoutId) clearTimeout(timeoutId);
-  timeoutId = setTimeout(() => {
-    if (value.length > 3) {
-      searchAnimeUtil();
-    }
-  }, 1000); // Adjust delay as needed (in milliseconds)
-};
-
-watch(searchText, debouncedSearch);
-
-const searchAnimeUtil = () => {
-  anime.searchAnimeAction(searchText.value);
-};
 
 const animeList = computed(() => anime.getAnimeList);
 const isLoadingAnimeList = computed(() => anime.isLoading);

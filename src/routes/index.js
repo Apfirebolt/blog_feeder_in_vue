@@ -1,6 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from '../store/auth'
 import Home from '../views/Home.vue'
-import NotFound from '../views/NotFound.vue'
+
+const authGuard = (to, from, next) => {
+    const { getAuthData } = useAuth()
+    if (to.name !== 'Login' && to.name !== 'Register' && !getAuthData) {
+        next({ name: 'Login' })
+    } else {
+        next()
+    }
+}
 
 const routes = [
     {
@@ -8,26 +17,27 @@ const routes = [
         name: 'Home',
         component: Home
     },
+    // nested admin routes
     {
-        path: '/manga',
-        name: 'Manga',
-        component: () => import('../views/Manga.vue')
+        path: '/login',
+        name: 'Login',
+        component: () => import('../views/Login.vue')
     },
     {
-        path: '/character',
-        name: 'Character',
-        component: () => import('../views/Characters.vue')
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('../views/Dashboard.vue')
     },
     {
-        path: '/people',
-        name: 'People',
-        component: () => import('../views/People.vue')
+        path: '/contact',
+        name: 'Contact',
+        component: () => import('../views/Contact.vue')
     },
     {
-        path: '/:catchAll(.*)',
-        name: 'NotFound',
-        component: NotFound
-    }
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('../views/Profile.vue')
+    },
 ]
 
 const router = createRouter({
@@ -35,5 +45,6 @@ const router = createRouter({
     routes
 })
 
+// router.beforeEach(authGuard)
 
 export default router

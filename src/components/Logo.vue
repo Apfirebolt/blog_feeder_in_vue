@@ -10,12 +10,5 @@
 </template>
 
 <script setup>
-import { inject } from "vue";
 import Logo from "../assets/logo.png";
-
-const message = inject("message");
-
-if (message) {
-  console.log(message); // Output: "Hello from parent!"
-}
 </script>
