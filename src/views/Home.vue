@@ -69,11 +69,27 @@
         </ul>
       </div>
     </main>
+    <p>
+      A new content {{ quillContent }}
+    </p>
+    <button class="bg-red-800 p-3 rounded text-white" @click="showData">
+      Show Data
+    </button>
+    <div class="container my-3 mx-auto">
+      <QuillEditor
+          theme="snow"
+          v-model:content="quillContent"
+          contentType="html"
+          ref="quill"
+        />
+    </div>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import Header from '../components/Header.vue'
 import Navigation from '../components/Navigation.vue'
 import {
@@ -93,7 +109,6 @@ import {
   SearchIcon,
 } from '@heroicons/vue/solid'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/vue/outline'
-
 
 const tabs = [
   { name: 'Applied', href: '#', count: '2', current: false },
@@ -119,6 +134,18 @@ const publishingOptions = [
   { name: 'Draft', description: 'This job posting will no longer be publicly accessible.', current: false },
 ]
 
+const showData = () => {
+  console.log('Value of content ', content.value)
+}
+
+const handleEditorChange = (value) => {
+  content.value = value
+  console.log('Value of content ', content.value)
+}
+
+const quillContent = ref('')
+const quill = ref()
+
 export default {
   components: {
     ArrowNarrowLeftIcon,
@@ -139,7 +166,8 @@ export default {
     SearchIcon,
     XIcon,
     Header,
-    Navigation
+    Navigation,
+    QuillEditor
   },
   setup() {
     const selected = ref(publishingOptions[0])
@@ -149,6 +177,9 @@ export default {
       candidates,
       publishingOptions,
       selected,
+      quillContent,
+      quill,
+      showData,
     }
   },
 }
