@@ -54,13 +54,33 @@ export const useGallery = defineStore("gallery", {
                 headers,
             });
             if (response) {
-                this.galleryList = response.data.data;
+                this.galleryList = response.data.gallery;
+                console.log('Now response ', response.data.gallery);
                 this.loading = false;
             }
         } catch (error) {
             console.log(error);
             this.loading = false;
         }
+    },
+
+    async getGalleryAction(id) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.get(`gallery/${id}`, {
+          headers,
+        });
+        if (response) {
+          this.gallery = response.data.data;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
     },
 
     resetGalleryData() {

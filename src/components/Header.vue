@@ -168,20 +168,12 @@ export default {
   },
   props: ['pageHeading'],
   setup(props) {
-    console.log('Props ', props)
-
     const pageHeading = ref(props.pageHeading);
     // watch for change in props
     watch(() => props.pageHeading, (newVal, oldVal) => {
-      console.log('New Value ', newVal)
-      console.log('Old Value ', oldVal)
       pageHeading.value = newVal;
     })
 
-    return {
-      user,
-      pageHeading
-    };
     return {
       user,
       pageHeading
