@@ -83,6 +83,44 @@ export const useGallery = defineStore("gallery", {
       }
     },
 
+    async createGalleryAction(data) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.post(`gallery`, data, {
+          headers,
+        });
+        if (response) {
+          this.gallery = response.data.data;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async updateGalleryAction(data) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.put(`gallery/${data.id}`, data, {
+          headers,
+        });
+        if (response) {
+          this.gallery = response.data.data;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetGalleryData() {
       this.gallery = {};
       this.galleryList = [];
