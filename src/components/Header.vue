@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import { ref, defineProps } from "vue";
+import { ref, defineProps, watch } from "vue";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import {
   ArrowNarrowLeftIcon,
@@ -169,7 +169,19 @@ export default {
   props: ['pageHeading'],
   setup(props) {
     console.log('Props ', props)
-    const { pageHeading } = {...props}
+
+    const pageHeading = ref(props.pageHeading);
+    // watch for change in props
+    watch(() => props.pageHeading, (newVal, oldVal) => {
+      console.log('New Value ', newVal)
+      console.log('Old Value ', oldVal)
+      pageHeading.value = newVal;
+    })
+
+    return {
+      user,
+      pageHeading
+    };
     return {
       user,
       pageHeading

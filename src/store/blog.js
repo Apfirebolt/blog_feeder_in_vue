@@ -44,6 +44,26 @@ export const useBlog = defineStore("blog", {
       }
     },
 
+    async getBlogAction(id) {
+      try {
+        const headers = { 
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.get(`posts/${id}`, {
+          headers,
+        });
+        if (response) {
+          console.log('RESPONSE: ', response.data)
+          this.blog = response.data.data;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetBlogData() {
       this.blog = {};
       this.blogList = [];
