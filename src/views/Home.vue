@@ -13,31 +13,11 @@
     <p>
       A new content {{ quillContent }}
     </p>
-    <button class="bg-red-800 p-3 rounded text-white" @click="showData">
-      Show Data
-    </button>
-    <div class="container my-3 mx-auto">
-      <QuillEditor
-          theme="snow"
-          v-model:content="quillContent"
-          contentType="html"
-          ref="quill"
-        />
-    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import Header from '../components/Header.vue'
 import Navigation from '../components/Navigation.vue'
-
-const showData = () => {
-  console.log('Value of content ', content.value)
-}
-
-const quillContent = ref('')
-const quill = ref()
 </script>

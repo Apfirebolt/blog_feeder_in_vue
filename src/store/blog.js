@@ -64,6 +64,45 @@ export const useBlog = defineStore("blog", {
       }
     },
 
+    async createBlogAction(blog) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.post(`posts`, blog, {
+          headers,
+        });
+        if (response) {
+          console.log('Response data ', response.data)
+          this.blog = response.data.data;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async updateBlogAction(blog) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.put(`posts/${blog.id}`, blog, {
+          headers,
+        });
+        if (response) {
+          this.blog = response.data.data;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetBlogData() {
       this.blog = {};
       this.blogList = [];
