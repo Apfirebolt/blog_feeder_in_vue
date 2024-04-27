@@ -138,15 +138,16 @@
       'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
   }
   const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'Jobs', href: '#', current: false },
-    { name: 'Applicants', href: '#', current: false },
-    { name: 'Company', href: '#', current: false },
+    { name: 'Dashboard', routeName: '#', current: true },
+    { name: 'Projects', routeName: '#', current: false },
+    { name: 'Resume', routeName: '#', current: false },
+    { name: 'Blog', routeName: '#', current: false },
+    { name: 'Contact', routeName: '#', current: false },
   ]
   const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Your Profile', routeName: '#' },
+    { name: 'Settings', routeName: '#' },
+    { name: 'Sign out', routeName: '#' },
   ]
   
   export default {

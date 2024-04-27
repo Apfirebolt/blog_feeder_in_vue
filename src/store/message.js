@@ -44,6 +44,42 @@ export const useMessage = defineStore("message", {
       }
     },
 
+    async deleteMessageAction(id) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.delete(`contact/${id}`, {
+          headers,
+        });
+        if (response) {
+          this.getMessagesAction();
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async deleteAllMessagesAction() {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.delete(`contact/delete-all`, {
+          headers,
+        });
+        if (response) {
+          this.getMessagesAction();
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetMessageData() {
       this.message = {};
       this.messageList = [];
