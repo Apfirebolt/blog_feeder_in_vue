@@ -67,7 +67,7 @@ import Loader from "../components/Loader.vue";
 
 const router = useRouter();
 const blogStore = useBlog();
-const pageHeading = ref("Blog Page");
+const pageHeading = ref("Blogs");
 
 const blogList = computed(() => blogStore.getBlogList);
 const isLoading = computed(() => blogStore.isLoading);

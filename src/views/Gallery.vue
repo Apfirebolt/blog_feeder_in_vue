@@ -67,7 +67,7 @@ import Loader from "../components/Loader.vue";
 
 const router = useRouter();
 const galleryStore = useGallery();
-const pageHeading = ref("Gallery Page");
+const pageHeading = ref("Gallery");
 
 const galleryList = computed(() => galleryStore.getGalleryList);
 const isLoading = computed(() => galleryStore.isLoading);

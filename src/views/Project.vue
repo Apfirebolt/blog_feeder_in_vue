@@ -67,7 +67,7 @@ import Loader from "../components/Loader.vue";
 
 const projectStore = useProject();
 const router = useRouter();
-const pageHeading = ref("Project Page");
+const pageHeading = ref("Projects");
 
 const projectList = computed(() => projectStore.getProjectList);
 const isLoading = computed(() => projectStore.isLoading);

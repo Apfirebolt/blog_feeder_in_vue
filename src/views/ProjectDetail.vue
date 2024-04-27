@@ -22,53 +22,67 @@
           >
           <p class="text-gray-700 text-base">{{ project.technology }}</p>
         </div>
-        <div>
-          <div>
-            <button
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div
+            v-for="image in project.pictures"
+            :key="image.id"
+            class="relative"
+          >
+            <img :src="getImageUrl(image)" alt="Image" class="w-full h-auto" />
+            <div
+              class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 inline-block mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                />
-              </svg>
-              Edit
-            </button>
-            <button
-              class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 inline-block mr-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-              Delete
-            </button>
+              <p class="text-sm">{{ image.title }}</p>
+            </div>
           </div>
+        </div>
+
+        <div class="my-3">
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 inline-block mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+            Edit
+          </button>
+          <button
+            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 inline-block mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+            Delete
+          </button>
         </div>
       </div>
     </main>
@@ -85,12 +99,14 @@ import Loader from "../components/Loader.vue";
 
 const projectStore = useProject();
 const route = useRoute();
-const pageHeading = ref("Project Detail Page");
+const pageHeading = computed(() => projectStore.getProject.title);
 
 const project = computed(() => projectStore.getProject);
 const isLoading = computed(() => projectStore.isLoading);
 
-console.log('Is Loading ', isLoading.value);
+const getImageUrl = (image) => {
+  return `https://apgiiit.com/uploads/${image.name}`;
+};
 
 onMounted(() => {
   projectStore.getProjectAction(route.params.id);
