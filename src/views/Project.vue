@@ -14,7 +14,7 @@
         </button>
       </div>
       <div
-        v-for="project in projectList" :key="project._id"
+        v-for="project in projectList.projects" :key="project._id"
         class="py-2 container mx-auto my-3"
       >
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -61,6 +61,7 @@
           </div>
         </div>
       </div>
+      <Pagination v-if="projectList" :currentPage="currentPage" :totalPages="projectList && projectList.lastPage" :on-page-change="onPageChange" />
     </main>
     <TransitionRoot appear :show="isFormOpened" as="template">
       <Dialog as="div" @close="closeProjectForm" class="relative z-10">
@@ -115,6 +116,7 @@ import Header from "../components/Header.vue";
 import Navigation from "../components/Navigation.vue";
 import Loader from "../components/Loader.vue";
 import ProjectForm from "../components/forms/ProjectForm.vue";
+import Pagination from "../components/Pagination.vue";
 
 import {
   TransitionRoot,
@@ -127,13 +129,23 @@ const projectStore = useProject();
 const router = useRouter();
 const isFormOpened = ref(false);
 const selectedProject = ref(null);
+const currentPage = ref(1);
+const itemsPerPage = ref(3);
 const pageHeading = ref("Projects");
 
 const projectList = computed(() => projectStore.getProjectList);
 const isLoading = computed(() => projectStore.isLoading);
+const totalPages = computed(() => Math.ceil(projectList.value.count / itemsPerPage.value));
+
+const currentIndex = computed(() => (currentPage.value - 1) * itemsPerPage.value);
 
 const goToProjectDetail = (project) => {
   router.push({ name: "ProjectDetail", params: { id: project._id } });
+};
+
+const onPageChange = async (page) => {
+  currentPage.value = page;
+  await projectStore.getProjectsAction(currentPage.value);
 };
 
 const openProjectForm = () => {

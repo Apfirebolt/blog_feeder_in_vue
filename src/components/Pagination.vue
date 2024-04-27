@@ -1,15 +1,14 @@
 <template>
   <!-- Pagination -->
   <nav
-    class="border-t border-gray-200 px-4 flex items-center justify-between sm:px-0"
+    class="border-t container mx-auto border-gray-200 px-4 flex items-center justify-between sm:px-3 py-2"
     aria-label="Pagination"
   >
     <div class="-mt-px w-0 flex-1 flex">
       <a
-        href="#"
-        class="border-t-2 border-transparent pt-4 pr-1 inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-200"
+        class="px-2 rounded shadow-md inline-flex items-center font-medium"
       >
-        <ArrowNarrowLeftIcon
+        <ArrowLeftIcon
           class="mr-3 h-5 w-5 text-gray-400"
           aria-hidden="true"
         />
@@ -17,52 +16,27 @@
       </a>
     </div>
     <div class="hidden md:-mt-px md:flex">
-      <a
-        href="#"
-        class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-      >
-        1
-      </a>
-      <!-- Current: "border-purple-500 text-purple-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200" -->
-      <a
-        href="#"
-        class="border-purple-500 text-purple-600 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-        aria-current="page"
-      >
-        2
-      </a>
-      <a
-        href="#"
-        class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-      >
-        3
-      </a>
-      <a
-        href="#"
-        class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-      >
-        4
-      </a>
-      <a
-        href="#"
-        class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-      >
-        5
-      </a>
-      <a
-        href="#"
-        class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200 border-t-2 pt-4 px-4 inline-flex items-center text-sm font-medium"
-      >
-        6
-      </a>
+      <span class="border-t-2 border-transparent pt-4 pr-1 inline-flex items-center text-sm font-medium text-gray-500">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+      <div class="space-x-1 flex items-end ml-3">
+        <a
+          :class="currentPage === page ? 'bg-danger-700 text-neutral-100' : 'text-gray-500 hover:text-gray-700'"
+          class="px-2 rounded shadow-md inline-flex items-center font-medium"
+          v-for="page in totalPages"
+          :key="page"
+          @click="onPageChange(page)"
+        >
+          {{ page }}
+        </a>
+      </div>
     </div>
     <div class="-mt-px w-0 flex-1 flex justify-end">
       <a
-        href="#"
-        class="border-t-2 border-transparent pt-4 pl-1 inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-200"
+        class="px-2 rounded shadow-md inline-flex items-center font-medium"
       >
         Next
-        <ArrowNarrowRightIcon
+        <ArrowRightIcon
           class="ml-3 h-5 w-5 text-gray-400"
           aria-hidden="true"
         />
@@ -80,10 +54,7 @@ const props = defineProps({
   },
   totalPages: {
     type: Number,
-    required: true,
-  },
-  nextPage: {
-    type: Boolean,
+    default: 1,
     required: true,
   },
   onPageChange: {
