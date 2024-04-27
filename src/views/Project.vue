@@ -1,27 +1,48 @@
 <template>
-    <main class="min-w-0 border-t border-gray-200">
+  <div class="min-h-full">
+    <Navigation />
+    <Header :pageHeading="pageHeading" />
+
+    <Loader v-if="isLoading" />
+    <main v-else class="min-w-0 border-t border-gray-200">
       <div
-        class="px-6 py-4 md:px-12 bg-gray-300 overflow-hidden"
+        v-for="project in projectList" :key="project._id"
+        class="px-4 py-2 container mx-auto my-3"
       >
-        <h2
-          class="text-4xl lg:text-5xl text-center md:text-left text-blue-900 leading-tight font-medium"
-        >
-          Project Page
-        </h2>
-      </div>
-      <div v-for="project in projectList" :key="project._id" class="px-4 py-2 container mx-auto my-3">
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          {{ project.title }}
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+              >Name</label
+            >
+            <p class="text-gray-700 text-base">{{ project.title }}</p>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+              >Description</label
+            >
+            <p class="text-gray-700 text-base">{{ project.content }}</p>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+              >Technologies</label
+            >
+            <p class="text-gray-700 text-base">{{ project.technology }}</p>
+          </div>
         </div>
       </div>
     </main>
-  </template>
-  
+  </div>
+</template>
+
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useProject } from "../store/project";
+import Header from "../components/Header.vue";
+import Navigation from "../components/Navigation.vue";
+import Loader from "../components/Loader.vue";
 
 const projectStore = useProject();
+const pageHeading = ref("Project Page");
 
 const projectList = computed(() => projectStore.getProjectList);
 const isLoading = computed(() => projectStore.isLoading);
@@ -30,4 +51,3 @@ onMounted(() => {
   projectStore.getProjectsAction();
 });
 </script>
-  

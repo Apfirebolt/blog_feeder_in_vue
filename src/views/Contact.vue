@@ -1,16 +1,10 @@
 <template>
   <div class="min-h-full">
     <Navigation />
-    <Header />
+    <Header :pageHeading="pageHeading" />
 
-    <main class="min-w-0 border-t border-gray-200">
-      <div class="px-6 py-4 md:px-12 bg-gray-300 overflow-hidden">
-        <h2
-          class="text-xl lg:text-xl text-center md:text-left text-blue-900 leading-tight font-medium"
-        >
-          Contact Page
-        </h2>
-      </div>
+    <Loader v-if="isLoading" />
+    <main v-else class="min-w-0 border-t border-gray-200">
       <div
         v-for="message in messageList"
         :key="message._id"
@@ -49,8 +43,10 @@ import { ref, computed, onMounted } from "vue";
 import { useMessage } from "../store/message";
 import Header from "../components/Header.vue";
 import Navigation from "../components/Navigation.vue";
+import Loader from "../components/Loader.vue";
 
 const messageStore = useMessage();
+const pageHeading = ref("Contact Page");
 
 const messageList = computed(() => messageStore.getMessageList);
 const isLoading = computed(() => messageStore.isLoading);

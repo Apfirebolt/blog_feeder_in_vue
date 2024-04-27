@@ -12,7 +12,7 @@
               <!-- Links section -->
               <div class="hidden lg:block lg:ml-10">
                 <div class="flex space-x-4">
-                  <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-100' : 'hover:text-gray-700', 'px-3 py-2 rounded-md text-sm font-medium text-gray-900']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+                  <router-link v-for="item in navigation" :key="item.name" :to="{ name: item.routeName }" :class="[item.current ? 'bg-gray-100' : 'hover:text-gray-700', 'px-3 py-2 rounded-md text-sm font-medium text-gray-900']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</router-link>
                 </div>
               </div>
             </div>
@@ -138,11 +138,11 @@
       'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
   }
   const navigation = [
-    { name: 'Dashboard', routeName: '#', current: true },
-    { name: 'Projects', routeName: '#', current: false },
-    { name: 'Resume', routeName: '#', current: false },
-    { name: 'Blog', routeName: '#', current: false },
-    { name: 'Contact', routeName: '#', current: false },
+    { name: 'Dashboard', routeName: 'Dashboard', current: true },
+    { name: 'Projects', routeName: 'Project', current: false },
+    { name: 'Gallery', routeName: 'Gallery', current: false },
+    { name: 'Blog', routeName: 'Blog', current: false },
+    { name: 'Contact', routeName: 'Contact', current: false },
   ]
   const userNavigation = [
     { name: 'Your Profile', routeName: '#' },
