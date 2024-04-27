@@ -29,30 +29,11 @@
         </div>
 
         <div class="my-3">
-          <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 inline-block mr-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
+          <button @click="openAddImageForm" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            Edit
+            Add Image
           </button>
           <button
             class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
@@ -76,23 +57,86 @@
         </div>
       </div>
     </main>
+    <TransitionRoot appear :show="isImageFormOpen" as="template">
+      <Dialog as="div" @close="closeAddImageForm" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-lg transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <BlogImageForm
+                  @close="closeAddImageForm"
+                  :addBlogImageUtil="addBlogImageUtil"
+                />
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useBlog } from "../store/blog";
 import { useRoute } from "vue-router";
 import Header from "../components/Header.vue";
 import Navigation from "../components/Navigation.vue";
 import Loader from "../components/Loader.vue";
+import BlogImageForm from "../components/forms/BlogImage.vue";
+
+import {
+  TransitionRoot,
+  TransitionChild,
+  Dialog,
+  DialogPanel,
+} from "@headlessui/vue";
 
 const blogStore = useBlog();
 const route = useRoute();
+const isImageFormOpen = ref(false);
 const pageHeading = computed(() => blogStore.getBlog.title);
 
 const blog = computed(() => blogStore.getBlog);
 const isLoading = computed(() => blogStore.isLoading);
+
+const openAddImageForm = () => {
+  isImageFormOpen.value = true;
+};
+
+const closeAddImageForm = () => {
+  isImageFormOpen.value = false;
+};
+
+const addBlogImageUtil = async (formData) => {
+  closeAddImageForm();
+  await blogStore.addBlogImageAction(route.params.id, formData);
+  await blogStore.getBlogAction(route.params.id);
+};
 
 const getImageUrl = (image) => {
   return `https://apgiiit.com/uploads/${image.name}`;
