@@ -7,7 +7,7 @@
       <form class="space-y-6" @submit.prevent="onSubmit">
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">
-            Your Name
+            Image Title (Optional)
           </label>
           <div class="mt-1">
             <input
@@ -20,7 +20,7 @@
             />
           </div>
         </div>
-        
+
         <div class="flex rounded-lg overflow-hidden">
           <img
             v-if="previewImage"

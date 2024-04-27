@@ -121,6 +121,43 @@ export const useGallery = defineStore("gallery", {
       }
     },
 
+    async deleteGalleryAction(id) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.delete(`gallery/${id}`, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async addGalleryImageAction(galleryId, formData) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+          "Content-Type": "multipart/form-data",
+        };
+        this.loading = true;
+        const response = await httpClient.post(`gallery/${galleryId}/pictures`, formData, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetGalleryData() {
       this.gallery = {};
       this.galleryList = [];
