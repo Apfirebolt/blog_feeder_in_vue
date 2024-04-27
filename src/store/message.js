@@ -80,6 +80,24 @@ export const useMessage = defineStore("message", {
       }
     },
 
+    async addMessageAction(data) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.post(`contact`, data, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetMessageData() {
       this.message = {};
       this.messageList = [];
