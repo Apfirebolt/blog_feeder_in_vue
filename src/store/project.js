@@ -100,6 +100,43 @@ export const useProject = defineStore("projects", {
         this.loading = false;
       }
     },
+
+    async deleteProjectAction(id) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.delete(`projects/${id}`, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async addProjectImageAction(projectId, formData) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+          "Content-Type": "multipart/form-data",
+        };
+        this.loading = true;
+        const response = await httpClient.post(`projects/${projectId}/images`, formData, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    }, 
     
     resetProjectData() {
       this.project = {};
