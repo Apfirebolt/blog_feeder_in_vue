@@ -14,7 +14,7 @@
         </button>
       </div>
       <div
-        v-for="post in galleryList" :key="post._id"
+        v-for="post in galleryList.gallery" :key="post._id"
         class="py-2 container mx-auto my-3"
       >
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -61,6 +61,7 @@
           </div>
         </div>
       </div>
+      <Pagination v-if="galleryList" :currentPage="currentPage" :totalPages="galleryList && galleryList.lastPage" :on-page-change="onPageChange" />
     </main>
     <TransitionRoot appear :show="isFormOpened" as="template">
       <Dialog as="div" @close="setIsConfirmOpenFalse" class="relative z-10">
@@ -115,6 +116,7 @@ import Header from "../components/Header.vue";
 import Navigation from "../components/Navigation.vue";
 import Loader from "../components/Loader.vue";
 import GalleryForm from "../components/forms/GalleryForm.vue";
+import Pagination from "../components/Pagination.vue";
 
 import {
   TransitionRoot,
@@ -128,6 +130,7 @@ const galleryStore = useGallery();
 const pageHeading = ref("Gallery");
 const selectedGallery = ref(null);
 const isFormOpened = ref(false);
+const currentPage = ref(1);
 
 const galleryList = computed(() => galleryStore.getGalleryList);
 const isLoading = computed(() => galleryStore.isLoading);
@@ -147,6 +150,11 @@ const openGalleryEditForm = (post) => {
 
 const setIsConfirmOpenFalse = () => {
   isFormOpened.value = false;
+};
+
+const onPageChange = async (page) => {
+  currentPage.value = page;
+  await galleryStore.getGalleryListAction(currentPage.value);
 };
 
 const addGalleryUtil = async (payload) => {

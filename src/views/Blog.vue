@@ -14,7 +14,7 @@
         </button>
       </div>
       <div
-        v-for="post in blogList"
+        v-for="post in blogList.posts"
         :key="post._id"
         class="py-2 container mx-auto my-3"
       >
@@ -108,6 +108,7 @@
           </div>
         </div>
       </div>
+      <Pagination v-if="blogList" :currentPage="currentPage" :totalPages="blogList && blogList.lastPage" :on-page-change="onPageChange" />
     </main>
     <TransitionRoot appear :show="isFormOpened" as="template">
       <Dialog as="div" @close="setIsConfirmOpenFalse" class="relative z-10">
@@ -162,6 +163,7 @@ import Header from "../components/Header.vue";
 import Navigation from "../components/Navigation.vue";
 import Loader from "../components/Loader.vue";
 import BlogForm from "../components/forms/BlogForm.vue";
+import Pagination from "../components/Pagination.vue";
 
 import {
   TransitionRoot,
@@ -175,6 +177,7 @@ const blogStore = useBlog();
 const pageHeading = ref("Blogs");
 const isFormOpened = ref(false);
 const selectedPost = ref(null);
+const currentPage = ref(1);
 
 const blogList = computed(() => blogStore.getBlogList);
 const isLoading = computed(() => blogStore.isLoading);
@@ -207,6 +210,11 @@ const setIsConfirmOpenFalse = () => {
 
 const goToPostDetail = (post) => {
   router.push({ name: "BlogDetail", params: { id: post._id } });
+};
+
+const onPageChange = async (page) => {
+  currentPage.value = page;
+  await blogStore.getBlogsAction(currentPage.value);
 };
 
 onMounted(() => {

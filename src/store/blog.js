@@ -8,7 +8,7 @@ const authStore = useAuth();
 export const useBlog = defineStore("blog", {
   state: () => ({
     blog: ref({}),
-    blogList: ref([]),
+    blogList: ref({}),
     loading: ref(false),
   }),
 
@@ -25,18 +25,29 @@ export const useBlog = defineStore("blog", {
   },
 
   actions: {
-    async getBlogsAction() {
+    async getBlogsAction(page = 1) {
       try {
         const headers = {
           Authorization: `Bearer ${authStore.authData.token}`,
         };
-        this.loading = true;
-        const response = await httpClient.get(`posts`, {
-          headers,
-        });
-        if (response) {
-          this.blogList = response.data.posts;
-          this.loading = false;
+        if (page) {
+          this.loading = true;
+          const response = await httpClient.get(`posts?page=${page}`, {
+            headers,
+          });
+          if (response) {
+            this.blogList = response.data;
+            this.loading = false;
+          }
+        } else {
+          this.loading = true;
+          const response = await httpClient.get(`posts`, {
+            headers,
+          });
+          if (response) {
+            this.blogList = response.data;
+            this.loading = false;
+          }
         }
       } catch (error) {
         console.log(error);
