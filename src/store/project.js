@@ -63,6 +63,44 @@ export const useProject = defineStore("projects", {
       }
     },
 
+    async addProjectAction(data) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.post(`projects`, data, {
+          headers,
+        });
+        if (response) {
+          this.project = response.data.data.project;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async updateProjectAction(data) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.put(`projects/${data.id}`, data, {
+          headers,
+        });
+        if (response) {
+          this.project = response.data.data.project;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+    
     resetProjectData() {
       this.project = {};
       this.projectList = [];

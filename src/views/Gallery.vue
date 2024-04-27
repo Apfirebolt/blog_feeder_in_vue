@@ -150,9 +150,9 @@ const setIsConfirmOpenFalse = () => {
 };
 
 const addGalleryUtil = async (payload) => {
+  setIsConfirmOpenFalse();
   await galleryStore.createGalleryAction(payload);
   await galleryStore.getGalleryListAction();
-  setIsConfirmOpenFalse();
 };
 
 const updateGalleryUtil = async (payload) => {
