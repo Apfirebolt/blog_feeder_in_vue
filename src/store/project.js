@@ -147,7 +147,26 @@ export const useProject = defineStore("projects", {
         console.log(error);
         this.loading = false;
       }
-    }, 
+    },
+    
+    // action to delete a single project image
+    async deleteProjectImageAction(projectId, imageId) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.delete(`projects/${projectId}/images/${imageId}`, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
     
     resetProjectData() {
       this.project = {};
