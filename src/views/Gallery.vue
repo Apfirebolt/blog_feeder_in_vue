@@ -45,7 +45,7 @@
                 </svg>
                 Edit
               </button>
-              <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2">
+              <button @click="deleteGallery(post)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -105,6 +105,48 @@
         </div>
       </Dialog>
     </TransitionRoot>
+
+    <TransitionRoot appear :show="isConfirmDeleteModalOpen" as="template">
+      <Dialog as="div" @close="closeConfirmDeleteModal" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-lg transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <ConfirmModal
+                  :message="`Are you sure you want to delete ${selectedGallery.title} Gallery?`"
+                  :confirmAction="deleteGalleryUtil"
+                  :cancelAction="closeConfirmDeleteModal"
+                />
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
@@ -117,6 +159,7 @@ import Navigation from "../components/Navigation.vue";
 import Loader from "../components/Loader.vue";
 import GalleryForm from "../components/forms/GalleryForm.vue";
 import Pagination from "../components/Pagination.vue";
+import ConfirmModal from "../components/ConfirmModal.vue";
 
 import {
   TransitionRoot,
@@ -129,6 +172,7 @@ const router = useRouter();
 const galleryStore = useGallery();
 const pageHeading = ref("Gallery");
 const selectedGallery = ref(null);
+const isConfirmDeleteModalOpen = ref(false);
 const isFormOpened = ref(false);
 const currentPage = ref(1);
 
@@ -150,6 +194,21 @@ const openGalleryEditForm = (post) => {
 
 const setIsConfirmOpenFalse = () => {
   isFormOpened.value = false;
+};
+
+const closeConfirmDeleteModal = () => {
+  isConfirmDeleteModalOpen.value = false;
+};
+
+const deleteGallery = (post) => {
+  selectedGallery.value = post;
+  isConfirmDeleteModalOpen.value = true;
+};
+
+const deleteGalleryUtil = async () => {
+  await galleryStore.deleteGalleryAction(selectedGallery.value._id);
+  await galleryStore.getGalleryListAction(currentPage.value);
+  closeConfirmDeleteModal();
 };
 
 const onPageChange = async (page) => {

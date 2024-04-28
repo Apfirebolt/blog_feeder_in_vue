@@ -267,7 +267,6 @@ const closeConfirmModal = () => {
 };
 
 const deleteBlogUtil = async () => {
-  console.log('Deleting ', selectedPost.value._id);
   await blogStore.deleteBlogAction(selectedPost.value._id);
   await blogStore.getBlogsAction(currentPage.value);
   isConfirmModalOpen.value = false;
