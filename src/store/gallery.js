@@ -168,6 +168,25 @@ export const useGallery = defineStore("gallery", {
       }
     },
 
+    // delete single gallery image, takes galleryId and image Id as params
+    async deleteGalleryImageAction(galleryId, imageId) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.delete(`gallery/${galleryId}/pictures/${imageId}`, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetGalleryData() {
       this.gallery = {};
       this.galleryList = [];
