@@ -1,19 +1,22 @@
 <template>
   <div class="min-h-full">
     <Navigation />
-    <Header :pageHeading="pageHeading" />
+    <Header :page-heading="pageHeading" />
 
     <Loader v-if="isLoading" />
-    <main v-else class="min-w-0 border-t border-gray-200">
+    <main
+      v-else
+      class="min-w-0 border-t border-gray-200"
+    >
       <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
-          <p class="text-gray-700 text-base">{{ gallery.title }}</p>
+          <p class="text-gray-700 text-base">
+            {{ gallery.title }}
+          </p>
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2"
-            >Description</label
-          >
+          <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
           <p v-html="gallery.content" />
         </div>
 
@@ -23,14 +26,20 @@
             :key="image.id"
             class="relative"
           >
-            <img :src="getImageUrl(image)" alt="Image" class="w-full h-auto" />
+            <img
+              :src="getImageUrl(image)"
+              alt="Image"
+              class="w-full h-auto"
+            >
             <div
               class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2"
             >
-              <p class="text-sm">{{ image.title }}</p>
+              <p class="text-sm">
+                {{ image.title }}
+              </p>
               <button
-                @click="deleteImage(image)"
                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mt-1"
+                @click="deleteImage(image)"
               >
                 Delete
               </button>
@@ -41,19 +50,29 @@
         <!-- Comments -->
         <div class="my-3">
           <label class="block text-gray-700 text-lg font-bold mb-2">Comments</label>
-          <div v-for="comment in gallery.comments" :key="comment.id" class="mb-2">
+          <div
+            v-for="comment in gallery.comments"
+            :key="comment.id"
+            class="mb-2"
+          >
             <div class="flex bg-neutral-100 shadow-md rounded my-2 py-4 px-2 justify-between">
               <div>
-                <p class="text-gray-700 text-base">{{ comment.content }}</p>
-                <p class="text-gray-700 text-sm">Posted By : {{ comment.name }}</p>
+                <p class="text-gray-700 text-base">
+                  {{ comment.content }}
+                </p>
+                <p class="text-gray-700 text-sm">
+                  Posted By : {{ comment.name }}
+                </p>
                 <p>
                   <span class="text-gray-700 text-sm mx-2">Posted on</span>
                   <span class="text-gray-700 text-sm">{{ comment.date }}</span>
                 </p>
               </div>
               <div>
-                <button @click="deleteComment(comment)"
-                  class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mt-1">
+                <button
+                  class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mt-1"
+                  @click="deleteComment(comment)"
+                >
                   Delete
                 </button>
               </div>
@@ -63,8 +82,8 @@
 
         <div class="my-3">
           <button
-            @click="openAddImageForm"
             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            @click="openAddImageForm"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -82,19 +101,39 @@
             </svg>
             Add Image
           </button>
-          <button @click="addComment"
-            class="bg-violet-800 hover:bg-blue-400 ml-2 text-white font-bold py-2 px-4 rounded">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          <button
+            class="bg-violet-800 hover:bg-blue-400 ml-2 text-white font-bold py-2 px-4 rounded"
+            @click="addComment"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 inline-block mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
             </svg>
             Add Comment
           </button>
         </div>
       </div>
     </main>
-    <TransitionRoot appear :show="isImageFormOpen" as="template">
-      <Dialog as="div" @close="closeAddImageForm" class="relative z-10">
+    <TransitionRoot
+      appear
+      :show="isImageFormOpen"
+      as="template"
+    >
+      <Dialog
+        as="div"
+        class="relative z-10"
+        @close="closeAddImageForm"
+      >
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -124,8 +163,8 @@
                 class="w-full max-w-lg transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <GalleryImageForm
+                  :add-gallery-image-util="addGalleryImageUtil"
                   @close="closeAddImageForm"
-                  :addGalleryImageUtil="addGalleryImageUtil"
                 />
               </DialogPanel>
             </TransitionChild>
@@ -134,8 +173,16 @@
       </Dialog>
     </TransitionRoot>
 
-    <TransitionRoot appear :show="isConfirmModalOpen" as="template">
-      <Dialog as="div" @close="closeConfirmModal" class="relative z-10">
+    <TransitionRoot
+      appear
+      :show="isConfirmModalOpen"
+      as="template"
+    >
+      <Dialog
+        as="div"
+        class="relative z-10"
+        @close="closeConfirmModal"
+      >
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -165,10 +212,10 @@
                 class="w-full max-w-lg transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <ConfirmModal
-                  @close="closeConfirmModal"
                   :confirm-action="deleteImageUtil"
                   :message="deleteMessage"
                   :cancel-action="closeConfirmModal"
+                  @close="closeConfirmModal"
                 />
               </DialogPanel>
             </TransitionChild>
@@ -177,8 +224,16 @@
       </Dialog>
     </TransitionRoot>
 
-    <TransitionRoot appear :show="isAddCommentFormOpen" as="template">
-      <Dialog as="div" @close="closeAddCommentForm" class="relative z-10">
+    <TransitionRoot
+      appear
+      :show="isAddCommentFormOpen"
+      as="template"
+    >
+      <Dialog
+        as="div"
+        class="relative z-10"
+        @close="closeAddCommentForm"
+      >
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -208,8 +263,8 @@
                 class="w-full max-w-lg transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <AddCommentForm
-                  @close="closeAddCommentForm"
                   :add-comment-util="addCommentUtil"
+                  @close="closeAddCommentForm"
                 />
               </DialogPanel>
             </TransitionChild>

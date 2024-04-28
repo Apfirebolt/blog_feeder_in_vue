@@ -4,7 +4,11 @@
       to="/"
       class="flex items-center justify-center h-16 w-16 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-600 lg:w-20"
     >
-      <img class="h-16 w-auto" :src="Logo" alt="Workflow" />
+      <img
+        class="h-16 w-auto"
+        :src="Logo"
+        alt="Workflow"
+      >
     </router-link>
   </div>
 </template>

@@ -1,14 +1,17 @@
 <template>
   <div class="min-h-full">
     <Navigation />
-    <Header :pageHeading="pageHeading" />
+    <Header :page-heading="pageHeading" />
 
     <Loader v-if="isLoading" />
-    <main v-else class="min-w-0 border-t border-gray-200">
+    <main
+      v-else
+      class="min-w-0 border-t border-gray-200"
+    >
       <div class="container mx-auto my-2">
         <button
-          @click="openMessageForm"
           class="py-2 px-4 bg-slate-300 hover:bg-slate-600 hover:text-white transition-all rounded"
+          @click="openMessageForm"
         >
           Add Message
         </button>
@@ -20,31 +23,42 @@
       >
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-              >Name</label
-            >
-            <p class="text-gray-700 text-base">{{ message.name }}</p>
+            <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+            <p class="text-gray-700 text-base">
+              {{ message.name }}
+            </p>
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-              >Email</label
-            >
-            <p class="text-gray-700 text-base">{{ message.email }}</p>
+            <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+            <p class="text-gray-700 text-base">
+              {{ message.email }}
+            </p>
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-              >Message</label
+            <label class="block text-gray-700 text-sm font-bold mb-2">Message</label>
+            <p class="text-gray-700 text-base">
+              {{ message.message }}
+            </p>
+            <button
+              class="rounded my-2 px-3 py-2 bg-danger-900 text-white hover:bg-danger-300"
+              @click="deleteMessageUtil(message._id)"
             >
-            <p class="text-gray-700 text-base">{{ message.message }}</p>
-            <button @click="deleteMessageUtil(message._id)" class="rounded my-2 px-3 py-2 bg-danger-900 text-white hover:bg-danger-300">
               Delete
             </button>
           </div>
         </div>
       </div>
     </main>
-    <TransitionRoot appear :show="isFormOpen" as="template">
-      <Dialog as="div" @close="setIsFormOpened" class="relative z-10">
+    <TransitionRoot
+      appear
+      :show="isFormOpen"
+      as="template"
+    >
+      <Dialog
+        as="div"
+        class="relative z-10"
+        @close="setIsFormOpened"
+      >
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -74,8 +88,8 @@
                 class="w-full max-w-md transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <ContactForm
+                  :add-message-util="addMessageUtil"
                   @close="setIsFormOpened"
-                  :addMessageUtil="addMessageUtil"
                 />
               </DialogPanel>
             </TransitionChild>

@@ -1,14 +1,17 @@
 <template>
   <div class="min-h-full">
     <Navigation />
-    <Header :pageHeading="pageHeading" />
+    <Header :page-heading="pageHeading" />
 
     <Loader v-if="isLoading" />
-    <main v-else class="min-w-0 border-t border-gray-200">
+    <main
+      v-else
+      class="min-w-0 border-t border-gray-200"
+    >
       <div class="container mx-auto my-2">
         <button
-          @click="openBlogForm"
           class="py-2 px-4 bg-slate-300 hover:bg-slate-600 hover:text-white transition-all rounded"
+          @click="openBlogForm"
         >
           Add Blog
         </button>
@@ -20,28 +23,26 @@
       >
         <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-              >Name</label
-            >
-            <p class="text-gray-700 text-base">{{ post.title }}</p>
+            <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+            <p class="text-gray-700 text-base">
+              {{ post.title }}
+            </p>
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-              >Description</label
-            >
+            <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
             <p v-html="post.content" />
           </div>
           <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2"
-              >Created :</label
-            >
-            <p class="text-gray-700 text-base">{{ post.createdAt }}</p>
+            <label class="block text-gray-700 text-sm font-bold mb-2">Created :</label>
+            <p class="text-gray-700 text-base">
+              {{ post.createdAt }}
+            </p>
           </div>
           <div>
             <div>
               <button
-                @click="openEditForm(post)"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="openEditForm(post)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -66,8 +67,8 @@
                 Edit
               </button>
               <button
-                @click="deleteBlog(post)"
                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+                @click="deleteBlog(post)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -86,8 +87,8 @@
                 Delete
               </button>
               <button
-                @click="goToPostDetail(post)"
                 class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-2"
+                @click="goToPostDetail(post)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -109,10 +110,23 @@
           </div>
         </div>
       </div>
-      <Pagination v-if="blogList" :currentPage="currentPage" :totalPages="blogList && blogList.lastPage" :on-page-change="onPageChange" />
+      <Pagination
+        v-if="blogList"
+        :current-page="currentPage"
+        :total-pages="blogList && blogList.lastPage"
+        :on-page-change="onPageChange"
+      />
     </main>
-    <TransitionRoot appear :show="isFormOpened" as="template">
-      <Dialog as="div" @close="setIsConfirmOpenFalse" class="relative z-10">
+    <TransitionRoot
+      appear
+      :show="isFormOpened"
+      as="template"
+    >
+      <Dialog
+        as="div"
+        class="relative z-10"
+        @close="setIsConfirmOpenFalse"
+      >
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -142,10 +156,10 @@
                 class="w-full max-w-xxl transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <BlogForm
-                  @close="setIsConfirmOpenFalse"
                   :blog="selectedPost"
-                  :addBlogUtil="addBlogUtil"
-                  :updateBlogUtil="updateBlogUtil"
+                  :add-blog-util="addBlogUtil"
+                  :update-blog-util="updateBlogUtil"
+                  @close="setIsConfirmOpenFalse"
                 />
               </DialogPanel>
             </TransitionChild>
@@ -154,8 +168,16 @@
       </Dialog>
     </TransitionRoot>
 
-    <TransitionRoot appear :show="isConfirmModalOpen" as="template">
-      <Dialog as="div" @close="closeConfirmModal" class="relative z-10">
+    <TransitionRoot
+      appear
+      :show="isConfirmModalOpen"
+      as="template"
+    >
+      <Dialog
+        as="div"
+        class="relative z-10"
+        @close="closeConfirmModal"
+      >
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -186,8 +208,8 @@
               >
                 <ConfirmModal
                   :message="deleteConfirmMessage"
-                  :confirmAction="deleteBlogUtil"
-                  :cancelAction="closeConfirmModal"
+                  :confirm-action="deleteBlogUtil"
+                  :cancel-action="closeConfirmModal"
                 />
               </DialogPanel>
             </TransitionChild>

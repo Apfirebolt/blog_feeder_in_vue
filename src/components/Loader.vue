@@ -1,7 +1,7 @@
 <template>
-    <div class="loader">
-        <div class="loader-circle"></div>
-    </div>
+  <div class="loader">
+    <div class="loader-circle" />
+  </div>
 </template>
 
 <script setup>

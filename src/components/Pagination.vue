@@ -21,10 +21,10 @@
       </span>
       <div class="space-x-1 flex items-end ml-3">
         <a
-          :class="currentPage === page ? 'bg-danger-700 text-neutral-100' : 'text-gray-500 hover:text-gray-700'"
-          class="px-2 rounded shadow-md inline-flex items-center font-medium"
           v-for="page in totalPages"
           :key="page"
+          :class="currentPage === page ? 'bg-danger-700 text-neutral-100' : 'text-gray-500 hover:text-gray-700'"
+          class="px-2 rounded shadow-md inline-flex items-center font-medium"
           @click="onPageChange(page)"
         >
           {{ page }}

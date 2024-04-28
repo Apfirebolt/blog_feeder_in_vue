@@ -4,9 +4,15 @@
       <h2 class="my-4 text-center text-xl font-extrabold text-gray-900">
         {{ project ? "Update Project" : "Add Project" }}
       </h2>
-      <form class="space-y-6" @submit="onSubmit">
+      <form
+        class="space-y-6"
+        @submit="onSubmit"
+      >
         <div>
-          <label for="title" class="block text-sm font-medium text-gray-700">
+          <label
+            for="title"
+            class="block text-sm font-medium text-gray-700"
+          >
             Project Title
           </label>
           <div class="mt-1">
@@ -18,7 +24,7 @@
               type="text"
               placeholder="Enter Post Title"
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
+            >
           </div>
           <p class="my-2 text-red-800">
             {{ errors.title }}
@@ -26,21 +32,27 @@
         </div>
 
         <div>
-          <label for="content" class="block text-sm font-medium text-gray-700">
+          <label
+            for="content"
+            class="block text-sm font-medium text-gray-700"
+          >
             Project Content
           </label>
           <div class="mt-1">
             <QuillEditor
-              theme="snow"
-              v-model:content="quillContent"
-              contentType="html"
               ref="quill"
+              v-model:content="quillContent"
+              theme="snow"
+              content-type="html"
             />
           </div>
         </div>
 
         <div>
-          <label for="technology" class="block text-sm font-medium text-gray-700">
+          <label
+            for="technology"
+            class="block text-sm font-medium text-gray-700"
+          >
             Technologies used (separated by comma)
           </label>
           <div class="mt-1">
@@ -52,7 +64,7 @@
               type="text"
               placeholder="Technologies used"
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
+            >
           </div>
           <p class="my-2 text-red-800">
             {{ errors.technology }}
@@ -60,7 +72,10 @@
         </div>
 
         <div>
-          <label for="projectUrl" class="block text-sm font-medium text-gray-700">
+          <label
+            for="projectUrl"
+            class="block text-sm font-medium text-gray-700"
+          >
             Github URL of the project
           </label>
           <div class="mt-1">
@@ -72,7 +87,7 @@
               type="text"
               placeholder="Project URL"
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
+            >
           </div>
           <p class="my-2 text-red-800">
             {{ errors.projectUrl }}
