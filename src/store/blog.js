@@ -152,6 +152,25 @@ export const useBlog = defineStore("blog", {
       }
     },
 
+    // action to delete a single blog image
+    async deleteBlogImageAction(blogId, imageId) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.delete(`posts/${blogId}/pictures/${imageId}`, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetBlogData() {
       this.blog = {};
       this.blogList = [];

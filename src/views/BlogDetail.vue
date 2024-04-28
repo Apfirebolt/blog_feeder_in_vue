@@ -24,6 +24,12 @@
               class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2"
             >
               <p class="text-sm">{{ image.title }}</p>
+              <button
+                @click="deleteImage(image)"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mt-1"
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
@@ -97,6 +103,49 @@
         </div>
       </Dialog>
     </TransitionRoot>
+
+    <TransitionRoot appear :show="isConfirmDeleteModalOpen" as="template">
+      <Dialog as="div" @close="closeConfirmDeleteModal" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-lg transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <ConfirmModal
+                  :message="deleteMessage"
+                  @close="closeConfirmDeleteModal"
+                  :confirm-action="deleteImageUtil"
+                  :cancel-action="closeConfirmDeleteModal"
+                />
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
@@ -108,6 +157,7 @@ import Header from "../components/Header.vue";
 import Navigation from "../components/Navigation.vue";
 import Loader from "../components/Loader.vue";
 import BlogImageForm from "../components/forms/BlogImage.vue";
+import ConfirmModal from "../components/ConfirmModal.vue";
 
 import {
   TransitionRoot,
@@ -119,6 +169,9 @@ import {
 const blogStore = useBlog();
 const route = useRoute();
 const isImageFormOpen = ref(false);
+const isConfirmDeleteModalOpen = ref(false);
+const selectedImage = ref(null);
+const deleteMessage = ref("");
 const pageHeading = computed(() => blogStore.getBlog.title);
 
 const blog = computed(() => blogStore.getBlog);
@@ -130,6 +183,22 @@ const openAddImageForm = () => {
 
 const closeAddImageForm = () => {
   isImageFormOpen.value = false;
+};
+
+const closeConfirmDeleteModal = () => {
+  isConfirmDeleteModalOpen.value = false;
+};
+
+const deleteImage = (image) => {
+  selectedImage.value = image;
+  deleteMessage.value = `Are you sure you want to delete ${image.title}?`;
+  isConfirmDeleteModalOpen.value = true;
+};
+
+const deleteImageUtil = async () => {
+  closeConfirmDeleteModal();
+  await blogStore.deleteBlogImageAction(route.params.id, selectedImage.value._id);
+  await blogStore.getBlogAction(route.params.id);
 };
 
 const addBlogImageUtil = async (formData) => {
