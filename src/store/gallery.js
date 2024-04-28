@@ -187,6 +187,21 @@ export const useGallery = defineStore("gallery", {
       }
     },
 
+    // add comment
+    async addGalleryCommentAction(galleryId, data) {
+      try {
+        const headers = { Authorization: `Bearer ${authStore.authData.token}` };
+        this.loading = true;
+        const response = await httpClient.post(`gallery/${galleryId}/comments`, data, { headers });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetGalleryData() {
       this.gallery = {};
       this.galleryList = [];

@@ -38,15 +38,33 @@
           </div>
         </div>
 
+        <!-- Comments -->
         <div class="my-3">
-          <button @click="openAddImageForm" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Add Image
-          </button>
+          <label class="block text-gray-700 text-lg font-bold mb-2">Comments</label>
+          <div v-for="comment in gallery.comments" :key="comment.id" class="mb-2">
+            <div class="flex bg-neutral-100 shadow-md rounded my-2 py-4 px-2 justify-between">
+              <div>
+                <p class="text-gray-700 text-base">{{ comment.content }}</p>
+                <p class="text-gray-700 text-sm">Posted By : {{ comment.name }}</p>
+                <p>
+                  <span class="text-gray-700 text-sm mx-2">Posted on</span>
+                  <span class="text-gray-700 text-sm">{{ comment.date }}</span>
+                </p>
+              </div>
+              <div>
+                <button @click="deleteComment(comment)"
+                  class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mt-1">
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="my-3">
           <button
-            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+            @click="openAddImageForm"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -59,10 +77,18 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
               />
             </svg>
-            Delete
+            Add Image
+          </button>
+          <button @click="addComment"
+            class="bg-violet-800 hover:bg-blue-400 ml-2 text-white font-bold py-2 px-4 rounded">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block mr-2" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Add Comment
           </button>
         </div>
       </div>
@@ -150,6 +176,47 @@
         </div>
       </Dialog>
     </TransitionRoot>
+
+    <TransitionRoot appear :show="isAddCommentFormOpen" as="template">
+      <Dialog as="div" @close="closeAddCommentForm" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-lg transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <AddCommentForm
+                  @close="closeAddCommentForm"
+                  :add-comment-util="addCommentUtil"
+                />
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
@@ -162,6 +229,7 @@ import Navigation from "../components/Navigation.vue";
 import Loader from "../components/Loader.vue";
 import GalleryImageForm from "../components/forms/GalleryImage.vue";
 import ConfirmModal from "../components/ConfirmModal.vue";
+import AddCommentForm from "../components/forms/AddComment.vue";
 
 import {
   TransitionRoot,
@@ -176,6 +244,7 @@ const isImageFormOpen = ref(false);
 const isConfirmModalOpen = ref(false);
 const selectedImage = ref(null);
 const deleteMessage = ref("");
+const isAddCommentFormOpen = ref(false);
 const pageHeading = computed(() => galleryStore.getGallery.title);
 
 const gallery = computed(() => galleryStore.getGallery);
@@ -197,9 +266,16 @@ const closeConfirmModal = () => {
   isConfirmModalOpen.value = false;
 };
 
+const closeAddCommentForm = () => {
+  isAddCommentFormOpen.value = false;
+};
+
 const deleteImageUtil = async () => {
   closeConfirmModal();
-  await galleryStore.deleteGalleryImageAction(gallery.value._id, selectedImage.value._id);
+  await galleryStore.deleteGalleryImageAction(
+    gallery.value._id,
+    selectedImage.value._id
+  );
   await galleryStore.getGalleryAction(route.params.id);
 };
 
@@ -213,6 +289,16 @@ const addGalleryImageUtil = async (formData) => {
   closeAddImageForm();
   await galleryStore.addGalleryImageAction(route.params.id, formData);
   await galleryStore.getGalleryAction(route.params.id);
+};
+
+const addCommentUtil = async (formData) => {
+  closeAddCommentForm();
+  await galleryStore.addGalleryCommentAction(route.params.id, formData);
+  await galleryStore.getGalleryAction(route.params.id);
+};
+
+const addComment = () => {
+  isAddCommentFormOpen.value = true;
 };
 
 const getImageUrl = (image) => {
