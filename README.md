@@ -74,6 +74,8 @@ No issues as of now, issues would be added here to be addressed later.
 
 - April 2024 : Initial Release with basic features from anime search page.
 
+- Approx 3600 LOC in 24 hrs.
+
 ## Stay In Touch
 
 - [Twitter](https://twitter.com/vuejs)

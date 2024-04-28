@@ -66,6 +66,7 @@
                 Edit
               </button>
               <button
+                @click="deleteBlog(post)"
                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
               >
                 <svg
@@ -152,6 +153,48 @@
         </div>
       </Dialog>
     </TransitionRoot>
+
+    <TransitionRoot appear :show="isConfirmModalOpen" as="template">
+      <Dialog as="div" @close="closeConfirmModal" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-lg transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <ConfirmModal
+                  :message="deleteConfirmMessage"
+                  :confirmAction="deleteBlogUtil"
+                  :cancelAction="closeConfirmModal"
+                />
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </div>
 </template>
 
@@ -164,6 +207,7 @@ import Navigation from "../components/Navigation.vue";
 import Loader from "../components/Loader.vue";
 import BlogForm from "../components/forms/BlogForm.vue";
 import Pagination from "../components/Pagination.vue";
+import ConfirmModal from "../components/ConfirmModal.vue";
 
 import {
   TransitionRoot,
@@ -176,8 +220,11 @@ const router = useRouter();
 const blogStore = useBlog();
 const pageHeading = ref("Blogs");
 const isFormOpened = ref(false);
+const isConfirmModalOpen = ref(false);
+const deleteConfirmMessage = ref("");
 const selectedPost = ref(null);
 const currentPage = ref(1);
+
 
 const blogList = computed(() => blogStore.getBlogList);
 const isLoading = computed(() => blogStore.isLoading);
@@ -193,19 +240,37 @@ const openEditForm = (post) => {
 
 const addBlogUtil = async (payload) => {
   await blogStore.createBlogAction(payload);
-  await blogStore.getBlogsAction();
+  await blogStore.getBlogsAction(blogList.value.lastPage);
+  currentPage.value = blogList.value.lastPage;
   isFormOpened.value = false;
 };
 
 const updateBlogUtil = async (payload) => {
   isFormOpened.value = true;
   await blogStore.updateBlogAction(payload);
-  await blogStore.getBlogsAction();
+  await blogStore.getBlogsAction(currentPage.value);
   isFormOpened.value = false;
 };
 
 const setIsConfirmOpenFalse = () => {
   isFormOpened.value = false;
+};
+
+const deleteBlog = async (post) => {
+  selectedPost.value = post;
+  deleteConfirmMessage.value = `Are you sure you want to delete ${post.title}?`;
+  isConfirmModalOpen.value = true;
+};
+
+const closeConfirmModal = () => {
+  isConfirmModalOpen.value = false;
+};
+
+const deleteBlogUtil = async () => {
+  console.log('Deleting ', selectedPost.value._id);
+  await blogStore.deleteBlogAction(selectedPost.value._id);
+  await blogStore.getBlogsAction(currentPage.value);
+  isConfirmModalOpen.value = false;
 };
 
 const goToPostDetail = (post) => {

@@ -119,6 +119,7 @@ export const useBlog = defineStore("blog", {
         const headers = {
           Authorization: `Bearer ${authStore.authData.token}`,
         };
+        console.log('ID: ', id)
         this.loading = true;
         const response = await httpClient.delete(`posts/${id}`, {
           headers,
