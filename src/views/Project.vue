@@ -251,6 +251,7 @@ const projectList = computed(() => projectStore.getProjectList);
 const isLoading = computed(() => projectStore.isLoading);
 
 const goToProjectDetail = (project) => {
+  console.log(project);
   router.push({ name: "ProjectDetail", params: { id: project._id } });
 };
 
