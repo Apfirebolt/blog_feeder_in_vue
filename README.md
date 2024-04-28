@@ -76,6 +76,8 @@ No issues as of now, issues would be added here to be addressed later.
 
 - Approx 3600 LOC in 24 hrs.
 
+- Added eslint and Husky, but husky pre-commit hooks are not running.
+
 ## Stay In Touch
 
 - [Twitter](https://twitter.com/vuejs)

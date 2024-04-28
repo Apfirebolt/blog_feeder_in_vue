@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "server": "node server.js",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "prepare": "husky install"
   },
   "husky": {
     "hooks": {
@@ -39,7 +40,7 @@
     "autoprefixer": "^10.4.19",
     "eslint": "^9.1.1",
     "eslint-plugin-vue": "^9.25.0",
-    "husky": "^9.0.11",
+    "husky": "^8.0.0",
     "lint-staged": "^15.2.2",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",

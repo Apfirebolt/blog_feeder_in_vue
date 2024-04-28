@@ -18,7 +18,7 @@
                 </div>
                 <div class="p-8">
                   <div class="uppercase tracking-wide text-sm font-semibold">
-                    Welcome to our blog
+                    Welcome to our blog Buddy
                   </div>
                   <a
                     href="#"
