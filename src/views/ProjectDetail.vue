@@ -225,6 +225,14 @@ const addComment = () => {
   isAddCommentFormOpen.value = true;
 };
 
+const deleteComment = async (comment) => {
+  await projectStore.deleteProjectCommentAction(
+    project.value._id,
+    comment._id
+  );
+  await projectStore.getProjectAction(route.params.id);
+};
+
 onMounted(() => {
   projectStore.getProjectAction(route.params.id);
 });

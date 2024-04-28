@@ -186,6 +186,25 @@ export const useProject = defineStore("projects", {
         this.loading = false;
       }
     },
+
+    // delete comment
+    async deleteProjectCommentAction(projectId, commentId) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.delete(`projects/${projectId}/comments/${commentId}`, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
     
     resetProjectData() {
       this.project = {};

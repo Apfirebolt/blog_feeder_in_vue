@@ -258,6 +258,14 @@ const addCommentUtil = async (formData) => {
   await blogStore.getBlogAction(route.params.id);
 };
 
+const deleteComment = async (comment) => {
+  await blogStore.deleteBlogCommentAction(
+    project.value._id,
+    comment._id
+  );
+  await blogStore.getBlogAction(route.params.id);
+};
+
 const getImageUrl = (image) => {
   return `https://apgiiit.com/uploads/${image.name}`;
 };
