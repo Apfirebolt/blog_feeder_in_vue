@@ -18,7 +18,7 @@
                 </div>
                 <div class="p-8">
                   <div class="uppercase tracking-wide text-sm font-semibold">
-                    Welcome to our blog - Linting your Vue 3 code with ESLint
+                    Welcome to our blog
                   </div>
                   <a
                     href="#"
