@@ -25,29 +25,18 @@ export const useResume = defineStore("resume", {
   },
 
   actions: {
-    async getProjectsAction(page = 1) {
+    async getAchievementsAction() {
       try {
         const headers = {
           Authorization: `Bearer ${authStore.authData.token}`,
         };
-        if (page) {
-          this.loading = true;
-          const response = await httpClient.get(`projects?page=${page}`, {
-            headers,
-          });
-          if (response) {
-            this.projectList = response.data;
-            this.loading = false;
-          }
-        } else {
-          this.loading = true;
-          const response = await httpClient.get(`projects`, {
-            headers,
-          });
-          if (response) {
-            this.projectList = response.data;
-            this.loading = false;
-          }
+        this.loading = true;
+        const response = await httpClient.get(`resume/achievement`, {
+          headers,
+        });
+        if (response) {
+          this.achievementList = response.data;
+          this.loading = false;
         }
       } catch (error) {
         console.log(error);
@@ -99,9 +88,13 @@ export const useResume = defineStore("resume", {
           Authorization: `Bearer ${authStore.authData.token}`,
         };
         this.loading = true;
-        const response = await httpClient.put(`resume/achievement/${data.id}`, data, {
-          headers,
-        });
+        const response = await httpClient.put(
+          `resume/achievement/${data.id}`,
+          data,
+          {
+            headers,
+          }
+        );
         if (response) {
           this.achievement = response.data.data.achievement;
           this.loading = false;
@@ -129,7 +122,7 @@ export const useResume = defineStore("resume", {
         this.loading = false;
       }
     },
-    
+
     resetResumeData() {
       this.achievement = {};
       this.achievementList = [];

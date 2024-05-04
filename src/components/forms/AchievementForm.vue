@@ -13,7 +13,7 @@
               for="title"
               class="block text-sm font-medium text-gray-700"
             >
-              Post Title
+              Achievement Title
             </label>
             <div class="mt-1">
               <input
@@ -36,7 +36,7 @@
               for="content"
               class="block text-sm font-medium text-gray-700"
             >
-              Post Content
+              Describe Your Achievement
             </label>
             <div class="mt-1">
               <QuillEditor
@@ -53,7 +53,7 @@
               type="submit"
               class="flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              {{ blog ? "Update Post" : "Add Post" }}
+              {{ achievement ? "Update Achievement" : "Add Achievement" }}
             </button>
           </div>
         </form>
@@ -67,15 +67,15 @@
   import { QuillEditor } from "@vueup/vue-quill";
   
   const props = defineProps({
-    blog: {
+    achievement: {
       type: Object,
       required: false,
     },
-    addBlogUtil: {
+    addAchievementUtil: {
       type: Function,
       required: true,
     },
-    updateBlogUtil: {
+    updateAchievementUtil: {
       type: Function,
       required: true,
     },
@@ -85,9 +85,9 @@
   const quill = ref();
   
   onMounted(() => {
-    if (props.blog) {
-      title.value = props.blog.title;
-      quillContent.value = props.blog.content;
+    if (props.achievement) {
+      title.value = props.achievement.title;
+      quillContent.value = props.achievement.content;
     }
   });
   
@@ -111,12 +111,12 @@
   
   // Submit handler
   const onSubmit = handleSubmit(async (values) => {
-    if (props.blog) {
+    if (props.achievement) {
       let updatePayload = { ...values, content: quillContent.value };
-      await props.updateBlogUtil({ ...updatePayload, id: props.blog._id });
+      await props.updateAchievementUtil({ ...updatePayload, id: props.achievement._id });
       return;
     }
-    await props.addBlogUtil({...values, content: quillContent.value });
+    await props.addAchievementUtil({...values, content: quillContent.value });
   });
   </script>
   
