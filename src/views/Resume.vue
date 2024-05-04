@@ -332,9 +332,9 @@
               >
                 <CertificateForm
                   :experience="selectedInstance"
-                  :add-experience-util="addExperienceUtil"
-                  :update-experience-util="updateExperienceUtil"
-                  @close="closeExperienceForm"
+                  :add-certificate-util="addCertificateUtil"
+                  :update-certificate-util="updateCertificateUtil"
+                  @close="closeCertificateForm"
                 />
               </DialogPanel>
             </TransitionChild>
@@ -513,7 +513,6 @@ const deleteExperience = (post) => {
 
 const deleteExperienceUtil = async () => {
   isConfirmDeleteModalOpen.value = false;  
-  console.log('THis is called')
   await resumeStore.deleteExperienceAction(selectedInstance.value._id);
   await resumeStore.getExperiencesAction();
 };
@@ -552,6 +551,31 @@ const deleteSkillUtil = async () => {
 };
 
 // Skill section ends, Certificate section begins
+
+const certificateList = computed(() => resumeStore.getCertificateList);
+
+const addCertificateUtil = async (payload) => {
+  closeCertificateForm();
+  console.log('Payload ', payload)  
+  await resumeStore.addCertificateAction(payload);
+  await resumeStore.getCertificatesAction();
+};
+
+const openCertificateEditForm = (post) => {
+  selectedInstance.value = post;
+  isExperienceFormOpened.value = true;
+};
+
+const updateCertificateUtil = async (payload) => {
+  closeCertificateForm();  
+  await resumeStore.updateCertificateAction(payload);
+  await resumeStore.getCertificatesAction();
+};
+
+const deleteCertificate = (post) => {
+  selectedInstance.value = post;
+  isConfirmDeleteModalOpen.value = true;
+};
 
 onMounted(() => {
   resumeStore.getAchievementsAction();
