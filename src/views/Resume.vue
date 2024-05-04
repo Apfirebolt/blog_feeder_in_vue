@@ -35,7 +35,7 @@
                   </button>
                   <button
                     class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                    @click="deleteExperience(experience)"
+                    @click="deleteInstance('experience', experience)"
                   >
                     Delete
                   </button>
@@ -53,30 +53,34 @@
             <h2 class="text-xl font-bold">Skills</h2>
             <button
               class="py-2 px-4 bg-slate-300 hover:bg-slate-600 hover:text-white transition-all rounded"
-              @click="isSkillFormOpened = true"
+              @click="openAddSkillForm"
             >
               Add Skill
             </button>
           </div>
+          {{ skillList }}
           <ul>
             <li
-              v-for="experience in experienceList.posts"
-              :key="experience.id"
+              v-for="skill in skillList.skills"
+              :key="skill.id"
             >
               <div>
-                <h3 class="text-lg font-bold">{{ experience.title }}</h3>
-                <p>{{ experience.content }}</p>
+                <h3 class="text-lg font-bold">{{ skill.name }}</h3>
+                <p>{{ skill.description }}</p>
+                <p>
+                  <span class="font-bold">Category:</span> {{ skill.category }}
+                </p>
 
                 <div class="px-2 py-3">
                   <button
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-                    @click="openExperienceEditForm(experience)"
+                    @click="openSkillEditForm(skill)"
                   >
                     Edit
                   </button>
                   <button
                     class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                    @click="deleteExperience(experience)"
+                    @click="deleteInstance('skill', skill)"
                   >
                     Delete
                   </button>
@@ -94,7 +98,7 @@
             <h2 class="text-xl font-bold">Achievements</h2>
             <button
               class="py-2 px-4 bg-slate-300 hover:bg-slate-600 hover:text-white transition-all rounded"
-              @click="isAchievementFormOpened = true"
+              @click="openAddAchievementForm"
             >
               Add Achievement
             </button>
@@ -117,7 +121,7 @@
                   </button>
                   <button
                     class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                    @click="deleteAchievement(achievement)"
+                    @click="deleteInstance('achievement', achievement)"
                   >
                     Delete
                   </button>
@@ -141,25 +145,30 @@
               Add Certificate
             </button>
           </div>
+
+          {{ certificateList }}
           <ul>
             <li
-              v-for="experience in experienceList.posts"
-              :key="experience.id"
+              v-for="certificate in certificateList.certificates"
+              :key="certificate._id"
             >
               <div>
-                <h3 class="text-lg font-bold">{{ experience.title }}</h3>
-                <p>{{ experience.content }}</p>
+                <h3 class="text-lg font-bold">{{ certificate.title }}</h3>
+                <p>{{ certificate.content }}</p>
+                <p>
+                  <span class="font-bold">Issued By:</span> {{ certificate.issuedBy }}
+                </p>
 
                 <div class="px-2 py-3">
                   <button
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-                    @click="openExperienceEditForm(experience)"
+                    @click="openCertificateEditForm(certificate)"
                   >
                     Edit
                   </button>
                   <button
                     class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                    @click="deleteExperience(experience)"
+                    @click="deleteInstance('certificate', certificate)"
                   >
                     Delete
                   </button>
@@ -331,7 +340,7 @@
                 class="w-full max-w-xxl transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <CertificateForm
-                  :experience="selectedInstance"
+                  :certificate="selectedInstance"
                   :add-certificate-util="addCertificateUtil"
                   :update-certificate-util="updateCertificateUtil"
                   @close="closeCertificateForm"
@@ -374,8 +383,8 @@
                 class="w-full max-w-md transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <ConfirmModal
-                  :message="`Are you sure you want to delete ${selectedInstance.title} Achievement?`"
-                  :confirm-action="deleteAchievementUtil"
+                  :message="deleteMessage"
+                  :confirm-action="deleteInstanceUtil"
                   :cancel-action="closeConfirmDeleteModal"
                 />
               </DialogPanel>
@@ -407,7 +416,6 @@ import {
   DialogPanel,
 } from "@headlessui/vue";
 
-const router = useRouter();
 const resumeStore = useResume();
 const pageHeading = ref("Resume");
 const selectedInstance = ref(null);
@@ -417,6 +425,8 @@ const isAchievementFormOpened = ref(false);
 const isExperienceFormOpened = ref(false);
 const isSkillFormOpened = ref(false);
 const isCertificateFormOpened = ref(false);
+const instanceType = ref("achievement");
+const deleteMessage = ref("");
 const selectedTab = ref("achievements");
 const tabOptions = ref([
   { name: "Achievements", value: "achievements" },
@@ -461,15 +471,9 @@ const closeConfirmDeleteModal = () => {
   isConfirmDeleteModalOpen.value = false;
 };
 
-const deleteAchievement = (post) => {
-  selectedInstance.value = post;
-  isConfirmDeleteModalOpen.value = true;
-};
-
-const deleteAchievementUtil = async () => {
-  await resumeStore.deleteAchievementAction(selectedInstance.value._id);
-  await resumeStore.getAchievementsAction();
-  closeConfirmDeleteModal();
+const openAddAchievementForm = () => {
+  selectedInstance.value = null;
+  isAchievementFormOpened.value = true;
 };
 
 const addAchievementUtil = async (payload) => {
@@ -506,21 +510,14 @@ const updateExperienceUtil = async (payload) => {
   await resumeStore.getExperiencesAction();
 };
 
-const deleteExperience = (post) => {
-  selectedInstance.value = post;
-  isConfirmDeleteModalOpen.value = true;
-};
-
-const deleteExperienceUtil = async () => {
-  isConfirmDeleteModalOpen.value = false;  
-  await resumeStore.deleteExperienceAction(selectedInstance.value._id);
-  await resumeStore.getExperiencesAction();
-};
-
-
 // End Experience Section, Skill Section begins
 
 const skillList = computed(() => resumeStore.getSkillList);
+
+const openAddSkillForm = () => {
+  selectedInstance.value = null;
+  isSkillFormOpened.value = true;
+};
 
 const addSkillUtil = async (payload) => {
   closeSkillForm();  
@@ -530,23 +527,12 @@ const addSkillUtil = async (payload) => {
 
 const openSkillEditForm = (post) => {
   selectedInstance.value = post;
-  isExperienceFormOpened.value = true;
+  isSkillFormOpened.value = true;
 };
 
 const updateSkillUtil = async (payload) => {
   closeSkillForm();  
   await resumeStore.updateSkillAction(payload);
-  await resumeStore.getSkillsAction();
-};
-
-const deleteSkill = (post) => {
-  selectedInstance.value = post;
-  isConfirmDeleteModalOpen.value = true;
-};
-
-const deleteSkillUtil = async () => {
-  isConfirmDeleteModalOpen.value = false;  
-  await resumeStore.deleteSkillAction(selectedInstance.value._id);
   await resumeStore.getSkillsAction();
 };
 
@@ -556,14 +542,13 @@ const certificateList = computed(() => resumeStore.getCertificateList);
 
 const addCertificateUtil = async (payload) => {
   closeCertificateForm();
-  console.log('Payload ', payload)  
   await resumeStore.addCertificateAction(payload);
   await resumeStore.getCertificatesAction();
 };
 
 const openCertificateEditForm = (post) => {
   selectedInstance.value = post;
-  isExperienceFormOpened.value = true;
+  isCertificateFormOpened.value = true;
 };
 
 const updateCertificateUtil = async (payload) => {
@@ -572,10 +557,39 @@ const updateCertificateUtil = async (payload) => {
   await resumeStore.getCertificatesAction();
 };
 
-const deleteCertificate = (post) => {
-  selectedInstance.value = post;
+const deleteInstance = (type, instance) => {
+  console.log('Called delete instance ', type, instance)
   isConfirmDeleteModalOpen.value = true;
+  instanceType.value = type;
+  selectedInstance.value = instance;
+
+  if (type === "achievement") {
+    deleteMessage.value = `Are you sure you want to delete ${selectedInstance.value.title} Achievement?`;
+  } else if (type === "experience") {
+    deleteMessage.value = `Are you sure you want to delete ${selectedInstance.value.title} Experience?`;
+  } else if (type === "skill") {
+    deleteMessage.value = `Are you sure you want to delete ${selectedInstance.value.name} Skill?`;
+  } else if (type === "certificate") {
+    deleteMessage.value = `Are you sure you want to delete ${selectedInstance.value.title} Certificate?`;
+  }
 };
+
+const deleteInstanceUtil = async () => {
+  isConfirmDeleteModalOpen.value = false;  
+  if (instanceType.value === "achievement") {
+    await resumeStore.deleteAchievementAction(selectedInstance.value._id);
+    await resumeStore.getAchievementsAction();
+  } else if (instanceType.value === "experience") {
+    await resumeStore.deleteExperienceAction(selectedInstance.value._id);
+    await resumeStore.getExperiencesAction();
+  } else if (instanceType.value === "skill") {
+    await resumeStore.deleteSkillAction(selectedInstance.value._id);
+    await resumeStore.getSkillsAction();
+  } else if (instanceType.value === "certificate") {
+    await resumeStore.deleteCertificateAction(selectedInstance.value._id);
+    await resumeStore.getCertificatesAction();
+  }
+}; 
 
 onMounted(() => {
   resumeStore.getAchievementsAction();
