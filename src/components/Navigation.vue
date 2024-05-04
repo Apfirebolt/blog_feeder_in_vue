@@ -233,6 +233,7 @@
   }
   const navigation = [
     { name: 'Dashboard', routeName: 'Dashboard', current: true },
+    { name: 'Resume', routeName: 'Resume', current: false },
     { name: 'Projects', routeName: 'Project', current: false },
     { name: 'Gallery', routeName: 'Gallery', current: false },
     { name: 'Blog', routeName: 'Blog', current: false },

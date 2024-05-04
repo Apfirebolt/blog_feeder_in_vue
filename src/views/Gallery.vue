@@ -17,7 +17,7 @@
         </button>
       </div>
       <div
-        v-for="post in galleryList.gallery"
+        v-for="post in galleryList.galleries"
         :key="post._id"
         class="py-2 container mx-auto my-3"
       >

@@ -3,7 +3,8 @@ import router from '../routes/index';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
-let baseURL = 'https://apgiiit.com/api/v1';
+// let baseURL = 'https://apgiiit.com/api/v1';
+let baseURL = 'http://localhost:5000/api/v1';
 
 const httpClient = axios.create({ baseURL });
 
