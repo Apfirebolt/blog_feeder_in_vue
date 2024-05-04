@@ -288,10 +288,10 @@
                 class="w-full max-w-xxl transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <AddSkillForm
-                  :experience="selectedInstance"
-                  :add-experience-util="addExperienceUtil"
-                  :update-experience-util="updateExperienceUtil"
-                  @close="closeExperienceForm"
+                  :skill="selectedInstance"
+                  :add-skill-util="addSkillUtil"
+                  :update-skill-util="updateSkillUtil"
+                  @close="closeSkillForm"
                 />
               </DialogPanel>
             </TransitionChild>

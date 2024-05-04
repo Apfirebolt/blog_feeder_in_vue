@@ -290,6 +290,7 @@ export const useResume = defineStore("resume", {
         try {
             const headers = {
                 Authorization: `Bearer ${authStore.authData.token}`,
+                "Content-Type": "multipart/form-data",
             };
             this.loading = true;
             const response = await httpClient.post(`resume/skill`, data, {
