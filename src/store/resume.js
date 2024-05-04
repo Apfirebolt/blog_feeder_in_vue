@@ -13,6 +13,8 @@ export const useResume = defineStore("resume", {
     experienceList: ref([]),
     skills: ref([]),
     skillList: ref([]),
+    certificate: ref({}),
+    certificateList: ref([]),
     loading: ref(false),
   }),
 
@@ -34,6 +36,12 @@ export const useResume = defineStore("resume", {
     },
     getSkillList() {
       return this.skillList;
+    },
+    getCertificate() {
+      return this.certificate;
+    },
+    getCertificateList() {
+      return this.certificateList;
     },
     isLoading() {
       return this.loading;
@@ -323,6 +331,101 @@ export const useResume = defineStore("resume", {
             };
             this.loading = true;
             const response = await httpClient.delete(`resume/skill/${id}`, {
+                headers,
+            });
+            if (response) {
+                this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    },
+
+    // Skill Section ends, certificate section starts
+    async getCertificatesAction() {
+        try {
+            const headers = {
+                Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.get(`resume/certificate`, {
+                headers,
+            });
+            if (response) {
+                this.certificateList = response.data;
+                this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    },
+
+    async getCertificateAction(id) {
+        try {
+            const headers = {
+                Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.get(`resume/certificate/${id}`, {
+                headers,
+            });
+            if (response) {
+                this.certificate = response.data.data.project;
+                this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    },
+
+    async addCertificateAction(data) {
+        try {
+            const headers = {
+                Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.post(`resume/certificate`, data, {
+                headers,
+            });
+            if (response) {
+                this.certificate = response.data.data.certificate;
+                this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    },
+
+    async updateCertificateAction(data) {
+        try {
+            const headers = {
+                Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.patch(`resume/certificate/${data.id}`, data, {
+                headers,
+            });
+            if (response) {
+                this.certificate = response.data.data.certificate;
+                this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    },
+
+    async deleteCertificateAction(id) {
+        try {
+            const headers = {
+                Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.delete(`resume/certificate/${id}`, {
                 headers,
             });
             if (response) {

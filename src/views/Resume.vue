@@ -129,8 +129,45 @@
       </section>
 
       <!-- Certificate Section -->
+
       <section class="container mx-auto my-3 px-2 py-4 bg-neutral-200">
-        Certificate
+        <div>
+          <div class="flex justify-between px-6 py-2">
+            <h2 class="text-xl font-bold">Certificate</h2>
+            <button
+              class="py-2 px-4 bg-slate-300 hover:bg-slate-600 hover:text-white transition-all rounded"
+              @click="isCertificateFormOpened = true"
+            >
+              Add Certificate
+            </button>
+          </div>
+          <ul>
+            <li
+              v-for="experience in experienceList.posts"
+              :key="experience.id"
+            >
+              <div>
+                <h3 class="text-lg font-bold">{{ experience.title }}</h3>
+                <p>{{ experience.content }}</p>
+
+                <div class="px-2 py-3">
+                  <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                    @click="openExperienceEditForm(experience)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    @click="deleteExperience(experience)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
       </section>
     </main>
 
@@ -263,6 +300,49 @@
       </Dialog>
     </TransitionRoot>
 
+    <TransitionRoot appear :show="isCertificateFormOpened" as="template">
+      <Dialog as="div" class="relative z-10" @close="closeCertificateForm">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div
+            class="flex min-h-full items-center justify-center p-4 text-center"
+          >
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-xxl transform overflow-hidden bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <CertificateForm
+                  :experience="selectedInstance"
+                  :add-experience-util="addExperienceUtil"
+                  :update-experience-util="updateExperienceUtil"
+                  @close="closeExperienceForm"
+                />
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
+
     <TransitionRoot appear :show="isConfirmDeleteModalOpen" as="template">
       <Dialog as="div" class="relative z-10" @close="closeConfirmDeleteModal">
         <TransitionChild
@@ -317,6 +397,7 @@ import Loader from "../components/Loader.vue";
 import AchievementForm from "../components/forms/AchievementForm.vue";
 import ExperienceForm from "../components/forms/ExperienceForm.vue";
 import AddSkillForm from "../components/forms/AddSkillForm.vue";
+import CertificateForm from "../components/forms/CertificateForm.vue";
 import ConfirmModal from "../components/ConfirmModal.vue";
 
 import {
@@ -335,6 +416,7 @@ const isFormOpened = ref(false);
 const isAchievementFormOpened = ref(false);
 const isExperienceFormOpened = ref(false);
 const isSkillFormOpened = ref(false);
+const isCertificateFormOpened = ref(false);
 const selectedTab = ref("achievements");
 const tabOptions = ref([
   { name: "Achievements", value: "achievements" },
@@ -360,6 +442,10 @@ const closeExperienceForm = () => {
 
 const closeSkillForm = () => {
   isSkillFormOpened.value = false;
+};
+
+const closeCertificateForm = () => {
+  isCertificateFormOpened.value = false;
 };
 
 const openAchievementEditForm = (post) => {
@@ -438,13 +524,39 @@ const deleteExperienceUtil = async () => {
 const skillList = computed(() => resumeStore.getSkillList);
 
 const addSkillUtil = async (payload) => {
-  closeExperienceForm();  
+  closeSkillForm();  
   await resumeStore.addSkillAction(payload);
   await resumeStore.getSkillsAction();
 };
+
+const openSkillEditForm = (post) => {
+  selectedInstance.value = post;
+  isExperienceFormOpened.value = true;
+};
+
+const updateSkillUtil = async (payload) => {
+  closeSkillForm();  
+  await resumeStore.updateSkillAction(payload);
+  await resumeStore.getSkillsAction();
+};
+
+const deleteSkill = (post) => {
+  selectedInstance.value = post;
+  isConfirmDeleteModalOpen.value = true;
+};
+
+const deleteSkillUtil = async () => {
+  isConfirmDeleteModalOpen.value = false;  
+  await resumeStore.deleteSkillAction(selectedInstance.value._id);
+  await resumeStore.getSkillsAction();
+};
+
+// Skill section ends, Certificate section begins
+
 onMounted(() => {
   resumeStore.getAchievementsAction();
   resumeStore.getExperiencesAction();
   resumeStore.getSkillsAction();
+  resumeStore.getCertificatesAction();
 });
 </script>
