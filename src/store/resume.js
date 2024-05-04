@@ -9,6 +9,8 @@ export const useResume = defineStore("resume", {
   state: () => ({
     achievement: ref({}),
     achievementList: ref([]),
+    experience: ref({}),
+    experienceList: ref([]),
     loading: ref(false),
   }),
 
@@ -18,6 +20,12 @@ export const useResume = defineStore("resume", {
     },
     getAchievementList() {
       return this.achievementList;
+    },
+    getExperience() {
+      return this.experience;
+    },
+    getExperienceList() {
+      return this.experienceList;
     },
     isLoading() {
       return this.loading;
@@ -88,7 +96,7 @@ export const useResume = defineStore("resume", {
           Authorization: `Bearer ${authStore.authData.token}`,
         };
         this.loading = true;
-        const response = await httpClient.put(
+        const response = await httpClient.patch(
           `resume/achievement/${data.id}`,
           data,
           {
@@ -123,9 +131,111 @@ export const useResume = defineStore("resume", {
       }
     },
 
+    // Experience API Calls
+    async getExperiencesAction() {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.get(`resume/experience`, {
+          headers,
+        });
+        if (response) {
+          this.experienceList = response.data;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async getExperienceAction(id) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.get(`resume/experience/${id}`, {
+          headers,
+        });
+        if (response) {
+          this.experience = response.data.data.project;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async addExperienceAction(data) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.post(`resume/experience`, data, {
+          headers,
+        });
+        if (response) {
+          this.experience = response.data.data.experience;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async updateExperienceAction(data) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        this.loading = true;
+        const response = await httpClient.patch(
+          `resume/experience/${data.id}`,
+          data,
+          {
+            headers,
+          }
+        );
+        if (response) {
+          this.experience = response.data.data.experience;
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
+    async deleteExperienceAction(id) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${authStore.authData.token}`,
+        };
+        console.log('Passed id is ', id)
+        this.loading = true;
+        const response = await httpClient.delete(`resume/experience/${id}`, {
+          headers,
+        });
+        if (response) {
+          this.loading = false;
+        }
+      } catch (error) {
+        console.log(error);
+        this.loading = false;
+      }
+    },
+
     resetResumeData() {
       this.achievement = {};
       this.achievementList = [];
+      this.experience = {};
+      this.experienceList = [];
     },
   },
 });
