@@ -11,6 +11,8 @@ export const useResume = defineStore("resume", {
     achievementList: ref([]),
     experience: ref({}),
     experienceList: ref([]),
+    skills: ref([]),
+    skillList: ref([]),
     loading: ref(false),
   }),
 
@@ -26,6 +28,12 @@ export const useResume = defineStore("resume", {
     },
     getExperienceList() {
       return this.experienceList;
+    },
+    getSkill() {
+      return this.skill;
+    },
+    getSkillList() {
+      return this.skillList;
     },
     isLoading() {
       return this.loading;
@@ -217,7 +225,7 @@ export const useResume = defineStore("resume", {
         const headers = {
           Authorization: `Bearer ${authStore.authData.token}`,
         };
-        console.log('Passed id is ', id)
+        console.log("Passed id is ", id);
         this.loading = true;
         const response = await httpClient.delete(`resume/experience/${id}`, {
           headers,
@@ -229,6 +237,101 @@ export const useResume = defineStore("resume", {
         console.log(error);
         this.loading = false;
       }
+    },
+
+    // Skills API
+    async getSkillsAction() {
+      try {
+        const headers = {
+            Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.get(`resume/skill`, {
+            headers,
+            });
+            if (response) {
+            this.skillList = response.data;
+            this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    },
+
+    async getSkillAction(id) {
+        try {
+            const headers = { 
+                Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.get(`resume/skill/${id}`, {
+                headers,
+            });
+            if (response) {
+                this.skill = response.data.data.project;
+                this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    },
+
+    async addSkillAction(data) {
+        try {
+            const headers = {
+                Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.post(`resume/skill`, data, {
+                headers,
+            });
+            if (response) {
+                this.skill = response.data.data.skill;
+                this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    },
+
+    async updateSkillAction(data) {
+        try {
+            const headers = {
+                Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.patch(`resume/skill/${data.id}`, data, {
+                headers,
+            });
+            if (response) {
+                this.skill = response.data.data.skill;
+                this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
+    },
+
+    async deleteSkillAction(id) {
+        try {
+            const headers = {
+                Authorization: `Bearer ${authStore.authData.token}`,
+            };
+            this.loading = true;
+            const response = await httpClient.delete(`resume/skill/${id}`, {
+                headers,
+            });
+            if (response) {
+                this.loading = false;
+            }
+        } catch (error) {
+            console.log(error);
+            this.loading = false;
+        }
     },
 
     resetResumeData() {
